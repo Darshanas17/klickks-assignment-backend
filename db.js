@@ -1,7 +1,10 @@
 const sqlite3 = require("sqlite3").verbose();
 const bcrypt = require("bcryptjs");
+const path = require("path");
 
-const db = new sqlite3.Database("./users.db", (err) => {
+const dbPath = path.resolve(__dirname, "users.db");
+
+const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error("Database connection error:", err.message);
   } else {
