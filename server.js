@@ -28,7 +28,7 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: true, // set true if using https
-      sameSite: "lax",
+      sameSite: "none",
     },
   })
 );
