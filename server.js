@@ -5,7 +5,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const SQLiteStore = require("connect-sqlite3")(session);
 const path = require("path");
-const db = require("./db"); // your existing db file
+const db = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,22 +14,16 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cookieParser());
 
-// CORS configuration
+// Simplified CORS configuration for production
 const allowedOrigins = [
   "https://klickks-assignment-frontend.onrender.com",
   "http://localhost:3000",
 ];
 
+// Use the cors middleware with your specific origin and credentials
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.log("Blocked by CORS:", origin);
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: allowedOrigins,
     credentials: true,
   })
 );
@@ -48,8 +42,9 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      // For production on Render, we need these two settings
+      secure: true,
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000,
     },
   })
@@ -66,7 +61,6 @@ app.use("/api", authRoutes);
 
 // Health check
 app.get("/health", (req, res) => {
-  // Test database connection
   db.get("SELECT 1 as test", (err) => {
     if (err) {
       return res.status(500).json({
@@ -97,14 +91,6 @@ app.get("/", (req, res) => {
 // Error handling
 app.use((err, req, res, next) => {
   console.error("Error:", err.message);
-
-  if (err.message === "Not allowed by CORS") {
-    return res.status(403).json({
-      message: "CORS error",
-      allowedOrigins: allowedOrigins,
-    });
-  }
-
   res.status(500).json({
     message: "Internal server error",
     error: process.env.NODE_ENV === "production" ? {} : err.message,
