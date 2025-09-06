@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://klickks-assignment-frontend-iota.vercel.app/", // frontend URL
+    origin: "https://klickks-assignment-frontend-iota.vercel.app", // frontend URL
     credentials: true,
   })
 );
