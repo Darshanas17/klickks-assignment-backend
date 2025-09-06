@@ -18,6 +18,7 @@ app.use(cookieParser());
 const allowedOrigins = [
   "https://klickks-assignment-frontend.onrender.com",
   "http://localhost:3000",
+  "https://klickks-assignment-frontend-iota.vercel.app",
 ];
 
 // Use the cors middleware with your specific origin and credentials
