@@ -11,8 +11,8 @@ router.post("/register", (req, res) => {
   if (!email || !password)
     return res.status(400).json({ message: "Email and password required" });
 
-  // Check if user exists
   db.get("SELECT * FROM users WHERE email = ?", [email], async (err, row) => {
+    if (err) return res.status(500).json({ message: "Database error" });
     if (row)
       return res.status(400).json({ message: "Email already registered" });
 
@@ -40,6 +40,7 @@ router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
   db.get("SELECT * FROM users WHERE email = ?", [email], async (err, user) => {
+    if (err) return res.status(500).json({ message: "Database error" });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
