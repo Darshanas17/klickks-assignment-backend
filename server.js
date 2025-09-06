@@ -16,7 +16,7 @@ app.use(cookieParser());
 
 // CORS configuration
 const allowedOrigins = [
-  "https://klickks-frontend.onrender.com",
+  "https://klickks-assignment-frontend.onrender.com",
   "http://localhost:3000",
 ];
 
